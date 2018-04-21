@@ -39,7 +39,6 @@ Matrix<T, N, M>::Matrix() : ptr(nullptr), n(N), m(M) {
 template <typename T, size_t N, size_t M>
 Matrix<T, N, M>::Matrix(initializer_list<int> il) {
     ptr = new int*[n];
-    int tot = 0;
     auto p = il.begin();
     for (int i = 0; i < n; i++)
         ptr[i] = new int[m];
