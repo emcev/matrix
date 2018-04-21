@@ -28,7 +28,6 @@ public:
     ~Matrix();
     size_t n = N;
     size_t m = M;
-//private:
     type** ptr;
 };
 
