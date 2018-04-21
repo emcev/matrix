@@ -28,13 +28,7 @@ public:
         ~Matrix();
 	size_t n;
 	size_t m;
-//private:
         type** ptr;
-//	size_t n;
-//	size_t m;
-//        auto operator[](size_t index) -> type*;
-//        bool operator==(const Matrix&);
-
 };
 
 template <typename T>
@@ -91,11 +85,11 @@ auto Matrix<T>::operator[](size_t index) -> int* {
 }
 
 template <typename T>
-auto Matrix<T>::operator-(const Matrix& mat) -> Matrix& {
-        if (n == mat.n && m == mat.m){
+auto Matrix<T>::operator-(const Matrix& m_matrix) -> Matrix& {
+        if (n == m_matrix.n && m == m_matrix.m){
             for (int i = 0; i < n; i++){
                 for (int j = 0; j < m; j++)
-                    ptr[i][j] = ptr[i][j] - mat.ptr[i][j];
+                    ptr[i][j] = ptr[i][j] - m_matrix.ptr[i][j];
             }
             return *this;
         }
@@ -104,11 +98,11 @@ auto Matrix<T>::operator-(const Matrix& mat) -> Matrix& {
 }
 
 template <typename T>
-auto Matrix<T>::operator+(const Matrix& mat) -> Matrix& {
-        if (n == mat.n && m == mat.m){
+auto Matrix<T>::operator+(const Matrix& m_matrix) -> Matrix& {
+        if (n == m_matrix.n && m == m_matrix.m){
             for (int i = 0; i < n; i++){
                 for (int j = 0; j < m; j++)
-                    ptr[i][j] = ptr[i][j] + mat.ptr[i][j];
+                    ptr[i][j] = ptr[i][j] + m_matrix.ptr[i][j];
             }
             return *this;
         }
@@ -117,11 +111,11 @@ auto Matrix<T>::operator+(const Matrix& mat) -> Matrix& {
 }
 
 template <typename T>
-bool Matrix<T>::operator==(const Matrix& mat) {
-        if (n == mat.n && m == mat.m){
+bool Matrix<T>::operator==(const Matrix& m_matrix) {
+        if (n == m_matrix.n && m == m_matrix.m){
             for (int i = 0; i < n; i++){
                 for (int j = 0; j < m; j++){
-                    if (ptr[i][j] != mat.ptr[i][j])
+                    if (ptr[i][j] != m_matrix.ptr[i][j])
                         return false;
                 }
             }
@@ -131,53 +125,54 @@ bool Matrix<T>::operator==(const Matrix& mat) {
 }
 
 template <typename T>
-ostream& operator<<(ostream& os, Matrix<T>& mat) {
-        os << mat.n << " " << mat.m << endl;
-        for (int i = 0; i < mat.n; i++){
-            for (int j = 0; j < mat.m; j++)
-                os << mat.ptr[i][j]<<"  ";
+ostream& operator<<(ostream& os, Matrix<T>& m_matrix) {
+        os << m_matrix.n << " " << m_matrix.m << endl;
+        for (int i = 0; i < m_matrix.n; i++){
+            for (int j = 0; j < m_matrix.m; j++)
+                os << m_matrix.ptr[i][j]<<"  ";
             os << endl;
         }
         return os;
 }
 
 template <typename T>
-istream& operator>>(istream& is, Matrix<T>& mat) {
+istream& operator>>(istream& is, Matrix<T>& m_matrix) {
 	if(is) {
-        	is >> mat.n >> mat.m;
-        	mat.ptr=new int*[mat.n];
-        	for(int i=0; i < mat.n; i++)
-            		mat.ptr[i]=new int[mat.m];
-        	for (int i = 0; i < mat.n; i++) {
-            		for (int j = 0; j < mat.m; j++)
-                		is >> mat.ptr[i][j];
+        	is >> m_matrix.n >> m_matrix.m;
+        	m_matrix.ptr=new int*[m_matrix.n];
+        	for(int i=0; i < m_matrix.n; i++)
+            		m_matrix.ptr[i]=new int[m_matrix.m];
+        	for (int i = 0; i < m_matrix.n; i++) {
+            		for (int j = 0; j < m_matrix.m; j++)
+                		is >> m_matrix.ptr[i][j];
             	}
         }
         return is;
 }
 
 template <typename T>
-auto Matrix<T>::m_swap(Matrix& mat) -> void {
-        swap(ptr, mat.ptr);
-        swap(n, mat.n);
-        swap(m, mat.m);
+auto Matrix<T>::m_swap(Matrix& m_matrix) -> void {
+        swap(ptr, m_matrix.ptr);
+        swap(n, m_matrix.n);
+        swap(m, m_matrix.m);
 }
 
 template <typename T>
-auto Matrix<T>::operator=(const Matrix& q) -> Matrix& {
+auto Matrix<T>::operator=(const Matrix& m_matrix) -> Matrix& {
         if (ptr != nullptr) {
-            for (int i = 0; i < n; i++) delete[] ptr[i];
-                delete [] ptr;
+            for (int i = 0; i < n; i++)
+		    delete[] ptr[i];
+            delete [] ptr;
             return *this;
         }
-        n = q.n;
-        m = q.m;
+        n = m_matrix.n;
+        m = m_matrix.m;
         ptr = new int*[n];
         for (int i = 0; i < n; i++)
             ptr[i] = new int[m];
         for (int i = 0; i < n; i++){
             for (int j = 0; j < m; j++){
-                ptr[i][j] = q.ptr[i][j];
+                ptr[i][j] = m_matrix.ptr[i][j];
             }
         }
         return *this;
