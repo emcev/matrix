@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <initializer_list>
 #include <iostream>
 #include <fstream>
@@ -5,19 +6,19 @@
 using namespace std;
 
 template <typename T>
-class Matrix {
+class Matrix{
 public:
         typedef int type;
         Matrix();
         Matrix(initializer_list<int> list);
         Matrix(const Matrix&);
-        auto swap(Matrix&) -> void;
-        auto operator=(const Matrix& q) -> Matrix;
+        auto m_swap(Matrix&) -> void;
+        auto operator=(const Matrix& q) -> Matrix&;
         auto empty() -> bool;
         auto columns() -> size_t;
         auto rows() -> size_t;
-        auto operator-(const Matrix&) -> Matrix;
-        auto operator+(const Matrix&) -> Matrix;
+        auto operator-(const Matrix&) -> Matrix&;
+        auto operator+(const Matrix&) -> Matrix&;
         auto operator[](size_t index) -> type*;
         bool operator==(const Matrix&);
         template <typename T2>
@@ -25,10 +26,15 @@ public:
         template <typename T3>
         friend istream& operator>>(istream&, Matrix&);
         ~Matrix();
-private:
+	size_t n;
+	size_t m;
+//private:
         type** ptr;
-        size_t n;
-        size_t m;
+//	size_t n;
+//	size_t m;
+//        auto operator[](size_t index) -> type*;
+//        bool operator==(const Matrix&);
+
 };
 
 template <typename T>
@@ -39,14 +45,14 @@ Matrix<T>::Matrix() {
 
 template <typename T>
 Matrix<T>::Matrix(initializer_list<int> list) {
+	n = m = 3;
         ptr = new int*[3];
-        for (int i = 0; i < 3; i++)
-            ptr[i] = new int[3];
-        for (int i = 0; i < 3; i++){
-            for (int j = 0; j < 3; j++){
-                ptr[i][j] = 0;
-            }
-        }
+    	for (int i = 0; i < 3; i++)
+		ptr[i] = new int[3];
+    	for (int i = 0; i < 3; i++) {
+      		for (int j = 0; j < 3; j++)
+        		ptr[i][j] = 0 + rand()%10;
+    	}
 }
 
 template <typename T>
@@ -59,10 +65,6 @@ Matrix<T>::Matrix(const Matrix& m_matrix) {
         }
         n = m_matrix.n;
         m = m_matrix.m;
-}
-
-template <typename T>
-auto Matrix<T>::swap(Matrix&) -> void {
 }
 
 template <typename T>
@@ -89,7 +91,7 @@ auto Matrix<T>::operator[](size_t index) -> int* {
 }
 
 template <typename T>
-auto Matrix<T>::operator-(const Matrix& mat) -> Matrix {
+auto Matrix<T>::operator-(const Matrix& mat) -> Matrix& {
         if (n == mat.n && m == mat.m){
             for (int i = 0; i < n; i++){
                 for (int j = 0; j < m; j++)
@@ -102,7 +104,7 @@ auto Matrix<T>::operator-(const Matrix& mat) -> Matrix {
 }
 
 template <typename T>
-auto Matrix<T>::operator+(const Matrix& mat) -> Matrix {
+auto Matrix<T>::operator+(const Matrix& mat) -> Matrix& {
         if (n == mat.n && m == mat.m){
             for (int i = 0; i < n; i++){
                 for (int j = 0; j < m; j++)
@@ -129,39 +131,40 @@ bool Matrix<T>::operator==(const Matrix& mat) {
 }
 
 template <typename T>
-auto Matrix<T>::operator<<(ostream& os, Matrix& mat) -> ostream& {
-        int x;
+ostream& operator<<(ostream& os, Matrix<T>& mat) {
         os << mat.n << " " << mat.m << endl;
         for (int i = 0; i < mat.n; i++){
-            for (int j = 0; j < mat.m; j++){
-                x = ptr[i][j];
-                os << x;
-            }
+            for (int j = 0; j < mat.m; j++)
+                os << mat.ptr[i][j]<<"  ";
             os << endl;
         }
         return os;
 }
 
 template <typename T>
-auto Matrix<T>::operator>>(istream& is, Matrix& mat) -> istream& {
-        is >> mat.n >> mat.m;
-        for (int i = 0; i < mat.n; i++){
-            for (int j = 0; j < mat.m; j++){
-                is >> ptr[i][j];
-            }
+istream& operator>>(istream& is, Matrix<T>& mat) {
+	if(is) {
+        	is >> mat.n >> mat.m;
+        	mat.ptr=new int*[mat.n];
+        	for(int i=0; i < mat.n; i++)
+            		mat.ptr[i]=new int[mat.m];
+        	for (int i = 0; i < mat.n; i++) {
+            		for (int j = 0; j < mat.m; j++)
+                		is >> mat.ptr[i][j];
+            	}
         }
         return is;
 }
 
 template <typename T>
-auto Matrix<T>::swap_(Matrix& mat) -> void {
+auto Matrix<T>::m_swap(Matrix& mat) -> void {
         swap(ptr, mat.ptr);
         swap(n, mat.n);
         swap(m, mat.m);
 }
 
 template <typename T>
-auto Matrix<T>::operator=(const Matrix& q) -> Matrix {
+auto Matrix<T>::operator=(const Matrix& q) -> Matrix& {
         if (ptr != nullptr) {
             for (int i = 0; i < n; i++) delete[] ptr[i];
                 delete [] ptr;
