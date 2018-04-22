@@ -33,7 +33,7 @@ int main() {
         ifstream in{"matrix.bin"};
         in >> m6;
 
-        m3.m_swap(m6);
+        m3.swap(m6);
 
         cout << m3 << endl;
 }
