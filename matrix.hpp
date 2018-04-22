@@ -32,12 +32,12 @@ private:
 };
 
 template <typename type, size_t N, size_t M>
-Matrix<T, N, M>::Matrix() : ptr(nullptr), n(N), m(M) {
+Matrix<type, N, M>::Matrix() : ptr(nullptr), n(N), m(M) {
     n = m = 0;
 }
 
 template <typename type, size_t N, size_t M>
-Matrix<T, N, M>::Matrix(initializer_list<int> il) {
+Matrix<type, N, M>::Matrix(initializer_list<int> il) {
     ptr = new int*[n];
     auto p = il.begin();
     for (int i = 0; i < n; i++)
