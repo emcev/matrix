@@ -70,4 +70,4 @@ before_script:
   - $CXX --version
   - cd ${TRAVIS_BUILD_DIR}
 script:
-- g++ main.cpp -I. -std=c++11 -o matrix
+- g++ main.cpp -I.  -o matrix
